@@ -6,7 +6,7 @@ const Placeholder = () => (
     <h1>Placeholder (Click links)</h1>
     <Link to="/providerdashboard">providerdashboard</Link>
     <br />
-    <Link to="/patientdashboard">patientdashboard (TODO)</Link>
+    <Link to="/contactdashboard">contactdashboard</Link>
     <br />
     <Link to="/signup">signup</Link>
     <br />

@@ -5,6 +5,7 @@ import "./App.css";
 
 import Placeholder from "./pages/placeholder/placeholder";
 import ProviderDashboard from "./pages/provider-dashboard/provider-dashboard";
+import ContactDashboard from "./pages/contact-dashboard/contact-dashboard";
 import SignUp from "./pages/sign-up/sign-up";
 import SignIn from "./pages/sign-in/sign-in";
 import Page404 from "./pages/page-404/page-404";
@@ -15,6 +16,7 @@ function App() {
       <Switch>
         <Route exact path="/" component={Placeholder} />
         <Route exact path="/providerdashboard" component={ProviderDashboard} />
+        <Route exact path="/contactdashboard" component={ContactDashboard} />
         <Route exact path="/signup" component={SignUp} />
         <Route exact path="/signin" component={SignIn} />
         <Route component={Page404} />

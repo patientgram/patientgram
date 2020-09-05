@@ -1,24 +1,24 @@
-import React from 'react';
-import Link from '@material-ui/core/Link';
-import { makeStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Title from './Title';
+import React from "react";
+import Link from "@material-ui/core/Link";
+import { makeStyles } from "@material-ui/core/styles";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
+import DashboardItemTitle from "../dashboard-item-title/dashboard-item-title";
 
-// Generate Order Data
+// Generate Update Data
 function createData(id, patientId, date, name, update) {
   return { id, patientId, date, name, update };
 }
 
 const rows = [
-  createData(0, 'abc', '16 Mar, 2019', 'Elvis Presley', 'Blah blah'),
-  createData(1, 'def', '16 Mar, 2019', 'Paul McCartney', 'Blah blah'),
-  createData(2, 'ghi', '16 Mar, 2019', 'Tom Scholz', 'Blah blah'),
-  createData(3, 'jkl', '16 Mar, 2019', 'Michael Jackson', 'Blah blah'),
-  createData(4, 'mno', '15 Mar, 2019', 'Bruce Springsteen', 'Blah blah'),
+  createData(0, "abc", "16 Mar, 2019", "Elvis Presley", "Blah blah"),
+  createData(1, "def", "16 Mar, 2019", "Paul McCartney", "Blah blah"),
+  createData(2, "ghi", "16 Mar, 2019", "Tom Scholz", "Blah blah"),
+  createData(3, "jkl", "16 Mar, 2019", "Michael Jackson", "Blah blah"),
+  createData(4, "mno", "15 Mar, 2019", "Bruce Springsteen", "Blah blah"),
 ];
 
 function preventDefault(event) {
@@ -31,11 +31,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Orders() {
+export default function Updates() {
   const classes = useStyles();
   return (
     <React.Fragment>
-      <Title>Recent Patients</Title>
+      <DashboardItemTitle>Recent Patients</DashboardItemTitle>
       <Table size="small">
         <TableHead>
           <TableRow>
