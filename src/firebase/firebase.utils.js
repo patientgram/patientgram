@@ -3,15 +3,9 @@ import firebase from "./firebase";
 
 const db = firebase.firestore();
 
-export async function getUpdatesForPatient(patientId) {
-  const patient = await getPatient(patientId);
-  const promises = [];
-  for (let update of patient.updates) {
-    promises.push(db.collection("updates").doc(update).get());
-  }
-  const updates = await Promise.all(promises);
-  return updates.map((update) => update.data());
-}
+/*
+Get contact, patient, or provider info
+*/
 
 export async function getContact(contactId) {
   const contact = await db.collection("contacts").doc(contactId).get();
@@ -28,6 +22,51 @@ export async function getProvider(providerId) {
   return provider.data();
 }
 
+/*
+Add new contact, patient, or provider
+*/
+
+export async function addContact(contactId, firstName, lastName, phoneNumber) {
+  await db
+    .collection("contacts")
+    .doc(contactId)
+    .set({ id: contactId, firstName, lastName, phoneNumber });
+}
+
+export async function addPatient(patientId, contactId) {
+  await db
+    .collection("patients")
+    .doc(patientId)
+    .set({ id: patientId, contactId });
+}
+
+export async function addProvider(providerId, firstName, lastName) {
+  await db
+    .collection("providers")
+    .doc(providerId)
+    .set({ id: providerId, firstName, lastName });
+}
+
+/**
+ * Gets all updates for given patient id
+ * @param {*} patientId
+ */
+export async function getUpdatesForPatient(patientId) {
+  const patient = await getPatient(patientId);
+  const promises = [];
+  for (let update of patient.updates) {
+    promises.push(db.collection("updates").doc(update).get());
+  }
+  const updates = await Promise.all(promises);
+  return updates.map((update) => update.data());
+}
+
+/**
+ * Adds new update with update message, patient id, and provider id. Updates the patient document.
+ * @param {*} patientId
+ * @param {*} providerId
+ * @param {*} updateMessage
+ */
 export async function addUpdate(patientId, providerId, updateMessage) {
   const updateId = Date.now().toString();
   // update updates db
@@ -42,5 +81,33 @@ export async function addUpdate(patientId, providerId, updateMessage) {
   // update patient db
   const patient = await getPatient(patientId);
   patient.updates.push(updateId);
-  db.collection("patients").doc(patientId).set(patient, { merge: true });
+  db.collection("patients")
+    .doc({ updates: patient.updates })
+    .set(patient, { merge: true });
+}
+
+/**
+ * Adds new patient for given provider.
+ * @param {*} patientId
+ * @param {*} providerId
+ */
+export async function addPatientForProvider(patientId, providerId) {
+  const provider = await getProvider(providerId);
+  provider.patients.push(patientId);
+  db.collection("providers")
+    .doc(providerId)
+    .set({ patients: provider.patients }, { merge: true });
+}
+
+/**
+ * Adds new patient for given contact.
+ * @param {*} patientId
+ * @param {*} contactId
+ */
+export async function addPatientForContact(patientId, contactId) {
+  const contact = await getContact(contactId);
+  contact.patients.push(patientId);
+  db.collection("providers")
+    .doc(contactId)
+    .set({ patients: contact.patients }, { merge: true });
 }
