@@ -1,4 +1,5 @@
 import React from "react";
+import { useParams } from "react-router-dom";
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -10,16 +11,18 @@ import List from "@material-ui/core/List";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
-import Badge from "@material-ui/core/Badge";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import Link from "@material-ui/core/Link";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import NotificationsIcon from "@material-ui/icons/Notifications";
-import { providerListItems } from "../../components/provider-list-items/provider-list-items";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import PeopleIcon from "@material-ui/icons/People";
 import Updates from "../../components/updates/updates";
+import Patients from "../../components/patients/patients";
 
 function Copyright() {
   return (
@@ -115,7 +118,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ProviderDashboard() {
+function ProviderDashboard() {
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
   const handleDrawerOpen = () => {
@@ -124,7 +127,31 @@ export default function ProviderDashboard() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+  const { patientId } = useParams();
+  const [selectedPatient, setSelectedPatient] = React.useState(null);
+  const mockPatients = [
+    {
+      patientId: 1,
+      patientName: "Alpha Bravo",
+      phoneNumber: 1231231234,
+      contactId: 1,
+      providerId: 1
+    },
+    {
+      patientId: 2,
+      patientName: "Charlie Delta",
+      phoneNumber: 1231231235,
+      contactId: 2,
+      providerId: 1
+    },
+    {
+      patientId: 3,
+      patientName: "Echo Foxtrot",
+      phoneNumber: 1231231236,
+      contactId: 3,
+      providerId: 1
+    }
+  ];
 
   return (
     <div className={classes.root}>
@@ -140,14 +167,16 @@ export default function ProviderDashboard() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-            Dashboard
-          </Typography>
-          <IconButton color="inherit">
-            <Badge badgeContent={4} color="secondary">
-              <NotificationsIcon />
-            </Badge>
-          </IconButton>
+          {
+            selectedPatient ?
+            <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
+              {selectedPatient.patientName} ({selectedPatient.patientId})'s Dashboard
+            </Typography>
+            :
+            <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
+              Dashboard
+            </Typography>
+          }
         </Toolbar>
       </AppBar>
       <Drawer
@@ -163,11 +192,20 @@ export default function ProviderDashboard() {
           </IconButton>
         </div>
         <Divider />
-        <List>{providerListItems}</List>
+        <List>
+          <ListItem button onClick={() => setSelectedPatient(null)}>
+            <ListItemIcon>
+              <PeopleIcon />
+            </ListItemIcon>
+            <ListItemText primary="Patients" />
+          </ListItem>
+        </List>
       </Drawer>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
         <Container maxWidth="lg" className={classes.container}>
+        {
+          selectedPatient ?
           <Grid container spacing={3}>
             {/* Recent Updates */}
             <Grid item xs={12}>
@@ -176,6 +214,16 @@ export default function ProviderDashboard() {
               </Paper>
             </Grid>
           </Grid>
+          :
+          <Grid container spacing={3}>
+            {/* Recent Updates */}
+            <Grid item xs={12}>
+              <Paper className={classes.paper}>
+                <Patients patients={mockPatients} setSelectedPatient={setSelectedPatient} />
+              </Paper>
+            </Grid>
+          </Grid>
+        }
           <Box pt={4}>
             <Copyright />
           </Box>
@@ -184,3 +232,5 @@ export default function ProviderDashboard() {
     </div>
   );
 }
+
+export default ProviderDashboard;
