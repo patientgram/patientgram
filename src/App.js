@@ -1,24 +1,26 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import {Route, Switch, Redirect} from "react-router-dom";
+import logo from "./logo.svg";
+import "./App.css";
+
+import Placeholder from "./pages/placeholder/placeholder";
+import ProviderDashboard from "./pages/provider-dashboard/provider-dashboard";
+import ContactDashboard from "./pages/contact-dashboard/contact-dashboard";
+import SignUp from "./pages/sign-up/sign-up";
+import SignIn from "./pages/sign-in/sign-in";
+import Page404 from "./pages/page-404/page-404";
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Switch>
+        <Route exact path="/" component={Placeholder} />
+        <Route exact path="/providerdashboard" component={ProviderDashboard} />
+        <Route exact path="/contactdashboard" component={ContactDashboard} />
+        <Route exact path="/signup" component={SignUp} />
+        <Route exact path="/signin" component={SignIn} />
+        <Route component={Page404} />
+      </Switch>
     </div>
   );
 }
