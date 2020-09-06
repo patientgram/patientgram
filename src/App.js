@@ -53,6 +53,7 @@ class App extends React.Component {
           <Switch>
             <Route exact path="/" component={Home} />
             <Route exact path="/login" component={SignInMethod} />
+            <Route exact path="/signin" component={SignIn} />
             <Route component={Page404} />
           </Switch>
         </div>
