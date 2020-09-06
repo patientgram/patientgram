@@ -1,3 +1,11 @@
+# PatientGram
+
+## Details
+
+<img src="https://raw.githubusercontent.com/patientgram/patientgram/master/public/android-chrome-512x512.png" alt="" width="400"/>
+
+An easy way to receive medical updates about your loved ones.
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
