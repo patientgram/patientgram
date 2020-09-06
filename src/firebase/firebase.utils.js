@@ -82,8 +82,8 @@ export async function addUpdate(patientId, providerId, updateMessage) {
   const patient = await getPatient(patientId);
   patient.updates.push(updateId);
   db.collection("patients")
-    .doc({ updates: patient.updates })
-    .set(patient, { merge: true });
+    .doc(patientId)
+    .set({ updates: patient.updates }, { merge: true });
 }
 
 /**

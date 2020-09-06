@@ -6,10 +6,10 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import DashboardItemTitle from "../dashboard-item-title/dashboard-item-title";
 
-export default function Patients({patients, setSelectedPatient}) {
+export default function Patients({patients, setSelectedPatient, isProvider}) {
   return (
     <React.Fragment>
-      <DashboardItemTitle>Patients (Click to see and write updates)</DashboardItemTitle>
+      <DashboardItemTitle>Patients (Click to see {isProvider ? "and write" : null} updates)</DashboardItemTitle>
       <Table size="small">
         <TableHead>
           <TableRow>
@@ -18,7 +18,9 @@ export default function Patients({patients, setSelectedPatient}) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {patients.map((patient) => (
+        {
+          patients ?
+          patients?.map((patient) => (
             <TableRow 
               key={patient.id} 
               onClick={() => setSelectedPatient(patient)}
@@ -26,7 +28,10 @@ export default function Patients({patients, setSelectedPatient}) {
               <TableCell>{patient.id}</TableCell>
               <TableCell>{patient.firstName} {patient.lastName}</TableCell>
             </TableRow>
-          ))}
+          ))
+          :
+          <TableRow><TableCell>No patients yet</TableCell></TableRow>
+        }
         </TableBody>
       </Table>
     </React.Fragment>

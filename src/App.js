@@ -2,7 +2,6 @@ import React from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 import "./App.css";
 
-import Placeholder from "./pages/placeholder/placeholder";
 import ProviderDashboard from "./pages/provider-dashboard/provider-dashboard";
 import ContactDashboard from "./pages/contact-dashboard/contact-dashboard";
 import SignUp from "./pages/sign-up/sign-up";

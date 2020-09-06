@@ -244,10 +244,10 @@ function ContactDashboard(props) {
           </Grid>
           :
           <Grid container spacing={3}>
-            {/* Recent Updates */}
+            {/* Display assigned patients */}
             <Grid item xs={12}>
               <Paper className={classes.paper}>
-                <Patients patients={allPatients} setSelectedPatient={setSelectedPatient} />
+                <Patients patients={allPatients} setSelectedPatient={setSelectedPatient} isProvider={isProvider} />
               </Paper>
             </Grid>
           </Grid>

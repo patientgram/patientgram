@@ -23,11 +23,14 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import PeopleIcon from "@material-ui/icons/People";
+import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
 
+import DashboardItemTitle from "../../components/dashboard-item-title/dashboard-item-title";
 import Updates from "../../components/updates/updates";
 import Patients from "../../components/patients/patients";
 
-import {getPatient} from "../../firebase/firebase.utils";
+import {getPatient, getUpdatesForPatient, addUpdate} from "../../firebase/firebase.utils";
 
 function Copyright() {
   return (
@@ -135,6 +138,8 @@ function ProviderDashboard(props) {
   };
   const [selectedPatient, setSelectedPatient] = React.useState(null);
   const [allPatients, setAllPatients] = React.useState([]);
+  const [allUpdates, setAllUpdates] = React.useState([]);
+  const [textAreaText, setTextAreaText] = React.useState("");
   // const mockPatients = [
   //   {
   //     patientId: 1,
@@ -158,7 +163,8 @@ function ProviderDashboard(props) {
   //     providerId: 1
   //   }
   // ];
-  const patientIds = user.patients;
+  let patientIds = user.patients;
+  // let updateIds = selectedPatient.updates;
 
   React.useEffect(() => {
     const fetchPatients = async () => {
@@ -166,15 +172,33 @@ function ProviderDashboard(props) {
       for (const patientId of patientIds) {
         const p = await getPatient(patientId);
         ps.push(p);
-        console.log(p);
-        console.log("after set");
-        console.log(allPatients);
         // .catch(err => console.log(err))
       }
       setAllPatients(ps);
+
+      // let us = [];
     }
     fetchPatients();
   }, []);
+
+  React.useEffect(() => {
+    console.log("inside");
+    if (selectedPatient) {
+      const fetchUpdates = async () => {
+        let us = [];
+        // for (const updateId of updateIds) {
+          us = await getUpdatesForPatient(selectedPatient.id);
+          // ps.push(p);
+          // console.log(p);
+          // console.log("after set");
+          // console.log(allPatients);
+          // .catch(err => console.log(err))
+        // }
+        setAllUpdates(us);
+      }
+      fetchUpdates();
+    }
+  }, [selectedPatient]);
 
   return (
     <div className={classes.root}>
@@ -193,7 +217,7 @@ function ProviderDashboard(props) {
           {
             selectedPatient ?
             <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-              {selectedPatient.firstName} {selectedPatient.lastName} ({selectedPatient.id})'s Dashboard
+              Patient: {selectedPatient.firstName} {selectedPatient.lastName} ({selectedPatient.id}) | Provider Dashboard
             </Typography>
             :
             <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
@@ -238,16 +262,37 @@ function ProviderDashboard(props) {
             {/* Display updates for selected patient */}
             <Grid item xs={12}>
               <Paper className={classes.paper}>
-                <Updates />
+                <Updates updates={allUpdates} />
+              </Paper>
+              <Paper className={classes.paper}>
+                <DashboardItemTitle>Enter your update below</DashboardItemTitle>
+                <TextField 
+                  multiline
+                  rows={5}
+                  onChange={(e) => setTextAreaText(e.target.value)}
+                />
+                <Button
+                  type="submit"
+                  // fullWidth
+                  variant="contained"
+                  color="primary"
+                  className={classes.submit}
+                  onClick={async (e) => {
+                    e.preventDefault();
+                    await addUpdate(selectedPatient.id, user.id, textAreaText);
+                  }}
+                >
+                  Send Update
+                </Button>
               </Paper>
             </Grid>
           </Grid>
           :
           <Grid container spacing={3}>
-            {/* Recent Updates */}
+            {/* Display assigned patients */}
             <Grid item xs={12}>
               <Paper className={classes.paper}>
-                <Patients patients={allPatients} setSelectedPatient={setSelectedPatient} />
+                <Patients patients={allPatients} setSelectedPatient={setSelectedPatient} isProvider={isProvider} />
               </Paper>
             </Grid>
           </Grid>
