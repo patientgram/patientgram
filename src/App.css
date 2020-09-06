@@ -28,19 +28,6 @@
   color: #61dafb;
 }
 
-.description {
-  font-size: calc(10px + 1vmin);
-  padding-left: 5vw;
-  padding-right: 10vw;
-}
-
-.image {
-  padding-bottom: 20px;
-  padding-top: 10px;
-  padding-left: 10vw;
-  width: 75%;
-}
-
 .login {
   color: white;
   align-items: right;
