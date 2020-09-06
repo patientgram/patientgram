@@ -140,6 +140,15 @@ function ProviderDashboard(props) {
   const [allPatients, setAllPatients] = React.useState([]);
   const [allUpdates, setAllUpdates] = React.useState([]);
   const [textAreaText, setTextAreaText] = React.useState("");
+  const refreshUpdates = () => {
+    if (selectedPatient) {
+      const fetchUpdates = async () => {
+        const us = await getUpdatesForPatient(selectedPatient.id)
+        setAllUpdates(us);
+      }
+      fetchUpdates();
+    }
+  }
   // const mockPatients = [
   //   {
   //     patientId: 1,
@@ -198,7 +207,7 @@ function ProviderDashboard(props) {
       }
       fetchUpdates();
     }
-  }, [selectedPatient]);
+  }, [selectedPatient, allUpdates]);
 
   return (
     <div className={classes.root}>
@@ -277,9 +286,10 @@ function ProviderDashboard(props) {
                   variant="contained"
                   color="primary"
                   className={classes.submit}
-                  onClick={async (e) => {
+                  onClick={(e) => {
                     e.preventDefault();
-                    await addUpdate(selectedPatient.id, user.id, textAreaText);
+                    addUpdate(selectedPatient.id, user.id, textAreaText);
+                    refreshUpdates();
                   }}
                 >
                   Send Update
