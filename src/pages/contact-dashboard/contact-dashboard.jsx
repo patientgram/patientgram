@@ -1,5 +1,6 @@
 import React from "react";
 import clsx from "clsx";
+
 import { makeStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Drawer from "@material-ui/core/Drawer";
@@ -18,8 +19,15 @@ import Link from "@material-ui/core/Link";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import NotificationsIcon from "@material-ui/icons/Notifications";
-import { contactListItems } from "../../components/contact-list-items/contact-list-items";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import PeopleIcon from "@material-ui/icons/People";
+
 import Updates from "../../components/updates/updates";
+import Patients from "../../components/patients/patients";
+
+import {getPatient} from "../../firebase/firebase.utils";
 
 function Copyright() {
   return (
@@ -115,7 +123,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ContactDashboard() {
+function ContactDashboard(props) {
+  const {user, isProvider, signOut} = props;
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
   const handleDrawerOpen = () => {
@@ -124,6 +133,48 @@ export default function ContactDashboard() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+  const [selectedPatient, setSelectedPatient] = React.useState(null);
+  const [allPatients, setAllPatients] = React.useState([]);
+  // const mockPatients = [
+  //   {
+  //     patientId: 1,
+  //     patientName: "Alpha Bravo",
+  //     phoneNumber: 1231231234,
+  //     contactId: 1,
+  //     providerId: 1
+  //   },
+  //   {
+  //     patientId: 2,
+  //     patientName: "Charlie Delta",
+  //     phoneNumber: 1231231235,
+  //     contactId: 2,
+  //     providerId: 1
+  //   },
+  //   {
+  //     patientId: 3,
+  //     patientName: "Echo Foxtrot",
+  //     phoneNumber: 1231231236,
+  //     contactId: 3,
+  //     providerId: 1
+  //   }
+  // ];
+  const patientIds = user.patients;
+
+  React.useEffect(() => {
+    const fetchPatients = async () => {
+      const ps = [];
+      for (const patientId of patientIds) {
+        const p = await getPatient(patientId);
+        ps.push(p);
+        console.log(p);
+        console.log("after set");
+        console.log(allPatients);
+        // .catch(err => console.log(err))
+      }
+      setAllPatients(ps);
+    }
+    fetchPatients();
+  }, []);
 
   return (
     <div className={classes.root}>
@@ -139,9 +190,16 @@ export default function ContactDashboard() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-            Contact Dashboard
-          </Typography>
+          {
+            selectedPatient ?
+            <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
+              {selectedPatient.firstName} {selectedPatient.lastName} ({selectedPatient.id})'s Dashboard
+            </Typography>
+            :
+            <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
+              Contact Dashboard
+            </Typography>
+          }
           <IconButton color="inherit">
             <Badge badgeContent={4} color="secondary">
               <NotificationsIcon />
@@ -162,19 +220,38 @@ export default function ContactDashboard() {
           </IconButton>
         </div>
         <Divider />
-        <List>{contactListItems}</List>
+        <List>
+          <ListItem button onClick={() => setSelectedPatient(null)}>
+            <ListItemIcon>
+              <PeopleIcon />
+            </ListItemIcon>
+            <ListItemText primary="Patients" />
+          </ListItem>
+        </List>
       </Drawer>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
         <Container maxWidth="lg" className={classes.container}>
+        {
+          selectedPatient ?
           <Grid container spacing={3}>
-            {/* Recent Updates */}
+            {/* Display updates for selected patient */}
             <Grid item xs={12}>
               <Paper className={classes.paper}>
                 <Updates />
               </Paper>
             </Grid>
           </Grid>
+          :
+          <Grid container spacing={3}>
+            {/* Recent Updates */}
+            <Grid item xs={12}>
+              <Paper className={classes.paper}>
+                <Patients patients={allPatients} setSelectedPatient={setSelectedPatient} />
+              </Paper>
+            </Grid>
+          </Grid>
+        }
           <Box pt={4}>
             <Copyright />
           </Box>
@@ -183,3 +260,5 @@ export default function ContactDashboard() {
     </div>
   );
 }
+
+export default ContactDashboard;

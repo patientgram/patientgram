@@ -1,5 +1,4 @@
 import React from "react";
-import { useParams } from "react-router-dom";
 import clsx from "clsx";
 
 import { makeStyles } from "@material-ui/core/styles";
@@ -12,12 +11,14 @@ import List from "@material-ui/core/List";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
+import Badge from "@material-ui/core/Badge";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import Link from "@material-ui/core/Link";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
+import NotificationsIcon from "@material-ui/icons/Notifications";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -134,7 +135,7 @@ function ProviderDashboard(props) {
   };
   const [selectedPatient, setSelectedPatient] = React.useState(null);
   const [allPatients, setAllPatients] = React.useState([]);
-  // let mockPatients = [
+  // const mockPatients = [
   //   {
   //     patientId: 1,
   //     patientName: "Alpha Bravo",
@@ -158,20 +159,21 @@ function ProviderDashboard(props) {
   //   }
   // ];
   const patientIds = user.patients;
-  const mockPatients = [];
 
   React.useEffect(() => {
-    for (const patientId of patientIds) {
-      const fetchPatients = async () => {
+    const fetchPatients = async () => {
+      const ps = [];
+      for (const patientId of patientIds) {
         const p = await getPatient(patientId);
+        ps.push(p);
         console.log(p);
-        setAllPatients([...allPatients, p]);
         console.log("after set");
         console.log(allPatients);
         // .catch(err => console.log(err))
       }
-      fetchPatients();
+      setAllPatients(ps);
     }
+    fetchPatients();
   }, []);
 
   return (
@@ -198,6 +200,11 @@ function ProviderDashboard(props) {
               Provider Dashboard
             </Typography>
           }
+          <IconButton color="inherit">
+            <Badge badgeContent={4} color="secondary">
+              <NotificationsIcon />
+            </Badge>
+          </IconButton>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -228,7 +235,7 @@ function ProviderDashboard(props) {
         {
           selectedPatient ?
           <Grid container spacing={3}>
-            {/* Recent Updates */}
+            {/* Display updates for selected patient */}
             <Grid item xs={12}>
               <Paper className={classes.paper}>
                 <Updates />
