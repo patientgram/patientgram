@@ -142,6 +142,7 @@ export default function SignUp({signInContact}) {
                 .then(user => {
                   signInContact(user);
                 })
+                .catch(err => console.log(err))
             }}
           >
             Sign Up

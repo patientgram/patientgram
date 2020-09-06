@@ -8,14 +8,14 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import DashboardItemTitle from "../dashboard-item-title/dashboard-item-title";
 
-const useStyles = makeStyles((theme) => ({
-  seeMore: {
-    marginTop: theme.spacing(3),
-  },
-}));
+// const useStyles = makeStyles((theme) => ({
+//   seeMore: {
+//     marginTop: theme.spacing(3),
+//   },
+// }));
 
 export default function Patients({patients, setSelectedPatient}) {
-  const classes = useStyles();
+  // const classes = useStyles();
   return (
     <React.Fragment>
       <DashboardItemTitle>Patients</DashboardItemTitle>
@@ -29,11 +29,11 @@ export default function Patients({patients, setSelectedPatient}) {
         <TableBody>
           {patients.map((patient) => (
             <TableRow 
-              key={patient.patientId} 
+              key={patient.id} 
               onClick={() => setSelectedPatient(patient)}
             >
-              <TableCell>{patient.patientId}</TableCell>
-              <TableCell>{patient.patientName}</TableCell>
+              <TableCell>{patient.id}</TableCell>
+              <TableCell>{patient.firstName} {patient.lastName}</TableCell>
             </TableRow>
           ))}
         </TableBody>

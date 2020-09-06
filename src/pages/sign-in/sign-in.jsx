@@ -113,6 +113,7 @@ export default function SignIn({signInProvider, signInContact}) {
                   .then(user => {
                     signInProvider(user);
                   })
+                  .catch(err => console.log(err))
               }}
             >
               Sign In As Provider
@@ -129,6 +130,7 @@ export default function SignIn({signInProvider, signInContact}) {
                   .then(user => {
                     signInContact(user);
                   })
+                  .catch(err => console.log(err))
               }}
             >
               Sign In As Contact

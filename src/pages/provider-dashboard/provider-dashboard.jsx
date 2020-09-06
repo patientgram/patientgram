@@ -26,7 +26,7 @@ import PeopleIcon from "@material-ui/icons/People";
 import Updates from "../../components/updates/updates";
 import Patients from "../../components/patients/patients";
 
-import {getUpdatesForPatient} from "../../firebase/firebase.utils";
+import {getPatient} from "../../firebase/firebase.utils";
 
 function Copyright() {
   return (
@@ -123,6 +123,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function ProviderDashboard(props) {
+  const {user, isProvider, signOut} = props;
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
   const handleDrawerOpen = () => {
@@ -131,35 +132,47 @@ function ProviderDashboard(props) {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-  const { patientId } = useParams();
   const [selectedPatient, setSelectedPatient] = React.useState(null);
-  const mockPatients = [
-    {
-      patientId: 1,
-      patientName: "Alpha Bravo",
-      phoneNumber: 1231231234,
-      contactId: 1,
-      providerId: 1
-    },
-    {
-      patientId: 2,
-      patientName: "Charlie Delta",
-      phoneNumber: 1231231235,
-      contactId: 2,
-      providerId: 1
-    },
-    {
-      patientId: 3,
-      patientName: "Echo Foxtrot",
-      phoneNumber: 1231231236,
-      contactId: 3,
-      providerId: 1
+  const [allPatients, setAllPatients] = React.useState([]);
+  // let mockPatients = [
+  //   {
+  //     patientId: 1,
+  //     patientName: "Alpha Bravo",
+  //     phoneNumber: 1231231234,
+  //     contactId: 1,
+  //     providerId: 1
+  //   },
+  //   {
+  //     patientId: 2,
+  //     patientName: "Charlie Delta",
+  //     phoneNumber: 1231231235,
+  //     contactId: 2,
+  //     providerId: 1
+  //   },
+  //   {
+  //     patientId: 3,
+  //     patientName: "Echo Foxtrot",
+  //     phoneNumber: 1231231236,
+  //     contactId: 3,
+  //     providerId: 1
+  //   }
+  // ];
+  const patientIds = user.patients;
+  const mockPatients = [];
+
+  React.useEffect(() => {
+    for (const patientId of patientIds) {
+      const fetchPatients = async () => {
+        const p = await getPatient(patientId);
+        console.log(p);
+        setAllPatients([...allPatients, p]);
+        console.log("after set");
+        console.log(allPatients);
+        // .catch(err => console.log(err))
+      }
+      fetchPatients();
     }
-  ];
-  console.log(props);
-  // TODO: Delete. Test Firebase function
-  getUpdatesForPatient("7554864663")
-    .then(data => console.log(data))
+  }, []);
 
   return (
     <div className={classes.root}>
@@ -178,7 +191,7 @@ function ProviderDashboard(props) {
           {
             selectedPatient ?
             <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-              {selectedPatient.patientName} ({selectedPatient.patientId})'s Dashboard
+              {selectedPatient.firstName} {selectedPatient.lastName} ({selectedPatient.id})'s Dashboard
             </Typography>
             :
             <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
@@ -227,7 +240,7 @@ function ProviderDashboard(props) {
             {/* Recent Updates */}
             <Grid item xs={12}>
               <Paper className={classes.paper}>
-                <Patients patients={mockPatients} setSelectedPatient={setSelectedPatient} />
+                <Patients patients={allPatients} setSelectedPatient={setSelectedPatient} />
               </Paper>
             </Grid>
           </Grid>
