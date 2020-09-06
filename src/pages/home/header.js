@@ -49,12 +49,12 @@ export default function Header(props) {
           <Link
             color="inherit"
             noWrap
-            key={"login"}
+            key={"signin"}
             variant="body2"
-            href={"/login"}
+            href={"/signin"}
             className={classes.toolbarLink}
           >
-            {"Login"}
+            {"Sign In"}
           </Link>
         </Button>
       </Toolbar>

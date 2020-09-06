@@ -16,13 +16,9 @@ class App extends React.Component {
   constructor() {
     super();
     this.state = {
-<<<<<<< HEAD
-      currentUser: null,
-=======
       user: null,
       isProvider: false,
       signedIn: false
->>>>>>> wudev
     };
   }
 
@@ -51,53 +47,13 @@ class App extends React.Component {
   }
 
   render() {
-<<<<<<< HEAD
-    if (this.state.currentUser) {
-      return (
-        <div className="App">
-          <Switch>
-            <Route exact path="/" component={Placeholder} />
-            <Route
-              exact
-              path="/providerdashboard"
-              component={ProviderDashboard}
-            />
-            <Route
-              exact
-              path="/providerdashboard/:patientId"
-              component={ProviderDashboard}
-            />
-            <Route
-              exact
-              path="/contactdashboard"
-              component={ContactDashboard}
-            />
-            <Route exact path="/signup" component={SignUp} />
-            <Route exact path="/signin" component={SignIn} />
-            <Route component={Page404} />
-          </Switch>
-        </div>
-      );
-    } else {
-      return (
-        <div className="App">
-          <Switch>
-            <Route exact path="/" component={Home} />
-            <Route exact path="/login" component={SignInMethod} />
-            <Route exact path="/signin" component={SignIn} />
-            <Route component={Page404} />
-          </Switch>
-        </div>
-      );
-    }
-=======
     return (
       <div className="App">
         <Switch>
           <Route exact path="/" 
             render={() =>
               !this.state.signedIn ?
-              <Placeholder />
+              <Home />
               :
               <Redirect to="/dashboard" />
             } 
@@ -142,7 +98,6 @@ class App extends React.Component {
         </Switch>
       </div>
     );
->>>>>>> wudev
   }
 }
 

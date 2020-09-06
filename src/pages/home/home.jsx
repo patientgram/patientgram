@@ -24,13 +24,13 @@ export default function Home() {
       </div>
       <div className={classes.description}>
         <p>
-          At PatientGram, we believe that keeping your loved one's updated is an
+          At PatientGram, we believe that keeping your loved ones updated is an
           essential part of patient care. This platform allows you to receive
           direct updates from doctors when there are changes to their care plan.
-          Simply create an account and get updates about your loved one's care
-          progress
+          Simply create an account and get updates about your loved ones care
+          progress.
         </p>
-        <h3>How it works</h3>
+        <h3>How It Works</h3>
         <p>
           A medical provider working with the patient will provide frequent
           updates. As the contact person for the patient, you will get a
