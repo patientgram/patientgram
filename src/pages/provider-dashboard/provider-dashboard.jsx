@@ -122,7 +122,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function ProviderDashboard() {
+function ProviderDashboard(props) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
   const handleDrawerOpen = () => {
@@ -156,6 +156,7 @@ function ProviderDashboard() {
       providerId: 1
     }
   ];
+  console.log(props);
   // TODO: Delete. Test Firebase function
   getUpdatesForPatient("7554864663")
     .then(data => console.log(data))
@@ -181,7 +182,7 @@ function ProviderDashboard() {
             </Typography>
             :
             <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-              Dashboard
+              Provider Dashboard
             </Typography>
           }
         </Toolbar>

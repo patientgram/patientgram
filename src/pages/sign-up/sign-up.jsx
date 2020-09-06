@@ -11,6 +11,8 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 
+import { getContact } from "../../firebase/firebase.utils";
+
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -44,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignUp() {
+export default function SignUp({signInContact}) {
   const classes = useStyles();
 
   return (
@@ -66,14 +68,14 @@ export default function SignUp() {
                 fullWidth
                 id="patientID"
                 label="Patient ID"
-                name="patientID"
+                // name="patientID"
                 autoComplete="patientID"
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
                 autoComplete="fname"
-                name="firstName"
+                // name="firstName"
                 variant="outlined"
                 required
                 fullWidth
@@ -89,7 +91,7 @@ export default function SignUp() {
                 fullWidth
                 id="lastName"
                 label="Last Name"
-                name="lastName"
+                // name="lastName"
                 autoComplete="lname"
               />
             </Grid>
@@ -100,7 +102,7 @@ export default function SignUp() {
                 fullWidth
                 id="email"
                 label="Email Address"
-                name="email"
+                // name="email"
                 autoComplete="email"
               />
             </Grid>
@@ -111,7 +113,7 @@ export default function SignUp() {
                 fullWidth
                 id="phoneNumber"
                 label="Phone Number"
-                name="phoneNumber"
+                // name="phoneNumber"
                 autoComplete="phoneNumber"
               />
             </Grid>
@@ -120,7 +122,7 @@ export default function SignUp() {
                 variant="outlined"
                 required
                 fullWidth
-                name="password"
+                // name="password"
                 label="Password"
                 type="password"
                 id="password"
@@ -134,6 +136,13 @@ export default function SignUp() {
             variant="contained"
             color="primary"
             className={classes.submit}
+            onClick={(e) => {
+              e.preventDefault();
+              getContact("2000806074")
+                .then(user => {
+                  signInContact(user);
+                })
+            }}
           >
             Sign Up
           </Button>

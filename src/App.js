@@ -13,20 +13,84 @@ class App extends React.Component {
   constructor() {
     super();
     this.state = {
-      currentUser: null
+      user: null,
+      isProvider: false,
+      signedIn: false
     };
+  }
+
+  signInProvider = (u) => {
+    this.setState({
+      user: u,
+      isProvider: true,
+      signedIn: true
+    });
+  }
+
+  signInContact = (u) => {
+    this.setState({
+      user: u,
+      isProvider: false,
+      signedIn: true
+    });
+  }
+
+  signOut = () => {
+    this.setState({
+      user: null,
+      isProvider: false,
+      signedIn: false
+    });
   }
 
   render() {
     return (
       <div className="App">
         <Switch>
-          <Route exact path="/" component={Placeholder} />
-          <Route exact path="/providerdashboard" component={ProviderDashboard} />
-          <Route exact path="/providerdashboard/:patientId" component={ProviderDashboard} />
-          <Route exact path="/contactdashboard" component={ContactDashboard} />
-          <Route exact path="/signup" component={SignUp} />
-          <Route exact path="/signin" component={SignIn} />
+          <Route exact path="/" 
+            render={() =>
+              !this.state.signedIn ?
+              <Placeholder />
+              :
+              <Redirect to="/dashboard" />
+            } 
+          />
+          <Route exact path="/dashboard" 
+            render={() => (
+              !this.state.signedIn ?
+              <Redirect to="/signin" />
+              :
+              this.state.isProvider ?
+              <ProviderDashboard 
+                user={this.state.user} 
+                isProvider={this.state.isProvider}
+                signOut={this.signOut} 
+              />
+              :
+              <ContactDashboard 
+                user={this.state.user} 
+                isProvider={this.state.isProvider} 
+                signOut={this.signOut} 
+              />
+            )}
+          />
+          <Route exact path="/signup" 
+            render={() => (
+              !this.state.signedIn ? 
+              <SignUp signInContact={this.signInContact} />
+              : 
+              <Redirect to="/" />
+            )} 
+          />
+          <Route exact path="/signin" 
+            render={() => (
+              !this.state.signedIn ? (
+                <SignIn signInProvider={this.signInProvider} signInContact={this.signInContact} />
+              ) : (
+                <Redirect to="/" />
+              )
+            )} 
+          />
           <Route component={Page404} />
         </Switch>
       </div>

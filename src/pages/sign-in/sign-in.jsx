@@ -13,6 +13,8 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 
+import { getProvider, getContact } from "../../firebase/firebase.utils";
+
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -57,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignIn() {
+export default function SignIn({signInProvider, signInContact}) {
   const classes = useStyles();
 
   return (
@@ -105,8 +107,31 @@ export default function SignIn() {
               variant="contained"
               color="primary"
               className={classes.submit}
+              onClick={(e) => {
+                e.preventDefault();
+                getProvider("1350943134")
+                  .then(user => {
+                    signInProvider(user);
+                  })
+              }}
             >
-              Sign In
+              Sign In As Provider
+            </Button>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+              onClick={(e) => {
+                e.preventDefault();
+                getContact("2000806074")
+                  .then(user => {
+                    signInContact(user);
+                  })
+              }}
+            >
+              Sign In As Contact
             </Button>
             <Grid container>
               <Grid item xs>
