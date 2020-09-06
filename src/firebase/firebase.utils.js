@@ -33,11 +33,11 @@ export async function addContact(contactId, firstName, lastName, phoneNumber) {
     .set({ id: contactId, firstName, lastName, phoneNumber });
 }
 
-export async function addPatient(patientId, contactId) {
+export async function addPatient(patientId, contactId, firstName, lastName) {
   await db
     .collection("patients")
     .doc(patientId)
-    .set({ id: patientId, contactId });
+    .set({ id: patientId, contactId, firstName, lastName });
 }
 
 export async function addProvider(providerId, firstName, lastName) {
