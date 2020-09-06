@@ -1,6 +1,4 @@
 import React from "react";
-import Link from "@material-ui/core/Link";
-import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -21,46 +19,30 @@ const rows = [
   createData(4, "mno", "15 Mar, 2019", "Bruce Springsteen", "Blah blah"),
 ];
 
-function preventDefault(event) {
-  event.preventDefault();
-}
-
-const useStyles = makeStyles((theme) => ({
-  seeMore: {
-    marginTop: theme.spacing(3),
-  },
-}));
-
-export default function Updates() {
-  const classes = useStyles();
+export default function Updates({updates, setSelectedPatient}) {
   return (
     <React.Fragment>
-      <DashboardItemTitle>Recent Patients</DashboardItemTitle>
+      <DashboardItemTitle>Updates for </DashboardItemTitle>
       <Table size="small">
         <TableHead>
           <TableRow>
-            <TableCell>Patient ID</TableCell>
+            <TableCell>Added By</TableCell>
             <TableCell>Date</TableCell>
-            <TableCell>Name</TableCell>
             <TableCell>Update</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {rows.map((row) => (
-            <TableRow key={row.id}>
-              <TableCell>{row.patientId}</TableCell>
+            <TableRow
+              key={row.id}
+            >
+              <TableCell>{row.addedBy}</TableCell>
               <TableCell>{row.date}</TableCell>
-              <TableCell>{row.name}</TableCell>
               <TableCell>{row.update}</TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
-      <div className={classes.seeMore}>
-        <Link color="primary" href="#" onClick={preventDefault}>
-          See more patients
-        </Link>
-      </div>
     </React.Fragment>
   );
 }

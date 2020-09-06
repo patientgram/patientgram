@@ -1,5 +1,4 @@
 import React from "react";
-import { useParams } from "react-router-dom";
 import clsx from "clsx";
 
 import { makeStyles } from "@material-ui/core/styles";
@@ -12,12 +11,14 @@ import List from "@material-ui/core/List";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
+import Badge from "@material-ui/core/Badge";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import Link from "@material-ui/core/Link";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
+import NotificationsIcon from "@material-ui/icons/Notifications";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -26,7 +27,7 @@ import PeopleIcon from "@material-ui/icons/People";
 import Updates from "../../components/updates/updates";
 import Patients from "../../components/patients/patients";
 
-import {getUpdatesForPatient} from "../../firebase/firebase.utils";
+import {getPatient} from "../../firebase/firebase.utils";
 
 function Copyright() {
   return (
@@ -122,7 +123,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function ProviderDashboard() {
+function ProviderDashboard(props) {
+  const {user, isProvider, signOut} = props;
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
   const handleDrawerOpen = () => {
@@ -131,34 +133,48 @@ function ProviderDashboard() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-  const { patientId } = useParams();
   const [selectedPatient, setSelectedPatient] = React.useState(null);
-  const mockPatients = [
-    {
-      patientId: 1,
-      patientName: "Alpha Bravo",
-      phoneNumber: 1231231234,
-      contactId: 1,
-      providerId: 1
-    },
-    {
-      patientId: 2,
-      patientName: "Charlie Delta",
-      phoneNumber: 1231231235,
-      contactId: 2,
-      providerId: 1
-    },
-    {
-      patientId: 3,
-      patientName: "Echo Foxtrot",
-      phoneNumber: 1231231236,
-      contactId: 3,
-      providerId: 1
+  const [allPatients, setAllPatients] = React.useState([]);
+  // const mockPatients = [
+  //   {
+  //     patientId: 1,
+  //     patientName: "Alpha Bravo",
+  //     phoneNumber: 1231231234,
+  //     contactId: 1,
+  //     providerId: 1
+  //   },
+  //   {
+  //     patientId: 2,
+  //     patientName: "Charlie Delta",
+  //     phoneNumber: 1231231235,
+  //     contactId: 2,
+  //     providerId: 1
+  //   },
+  //   {
+  //     patientId: 3,
+  //     patientName: "Echo Foxtrot",
+  //     phoneNumber: 1231231236,
+  //     contactId: 3,
+  //     providerId: 1
+  //   }
+  // ];
+  const patientIds = user.patients;
+
+  React.useEffect(() => {
+    const fetchPatients = async () => {
+      const ps = [];
+      for (const patientId of patientIds) {
+        const p = await getPatient(patientId);
+        ps.push(p);
+        console.log(p);
+        console.log("after set");
+        console.log(allPatients);
+        // .catch(err => console.log(err))
+      }
+      setAllPatients(ps);
     }
-  ];
-  // TODO: Delete. Test Firebase function
-  getUpdatesForPatient("7554864663")
-    .then(data => console.log(data))
+    fetchPatients();
+  }, []);
 
   return (
     <div className={classes.root}>
@@ -177,13 +193,18 @@ function ProviderDashboard() {
           {
             selectedPatient ?
             <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-              {selectedPatient.patientName} ({selectedPatient.patientId})'s Dashboard
+              {selectedPatient.firstName} {selectedPatient.lastName} ({selectedPatient.id})'s Dashboard
             </Typography>
             :
             <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-              Dashboard
+              Provider Dashboard
             </Typography>
           }
+          <IconButton color="inherit">
+            <Badge badgeContent={4} color="secondary">
+              <NotificationsIcon />
+            </Badge>
+          </IconButton>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -214,7 +235,7 @@ function ProviderDashboard() {
         {
           selectedPatient ?
           <Grid container spacing={3}>
-            {/* Recent Updates */}
+            {/* Display updates for selected patient */}
             <Grid item xs={12}>
               <Paper className={classes.paper}>
                 <Updates />
@@ -226,7 +247,7 @@ function ProviderDashboard() {
             {/* Recent Updates */}
             <Grid item xs={12}>
               <Paper className={classes.paper}>
-                <Patients patients={mockPatients} setSelectedPatient={setSelectedPatient} />
+                <Patients patients={allPatients} setSelectedPatient={setSelectedPatient} />
               </Paper>
             </Grid>
           </Grid>
