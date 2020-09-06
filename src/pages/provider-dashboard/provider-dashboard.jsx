@@ -1,6 +1,7 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import clsx from "clsx";
+
 import { makeStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Drawer from "@material-ui/core/Drawer";
@@ -21,8 +22,11 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import PeopleIcon from "@material-ui/icons/People";
+
 import Updates from "../../components/updates/updates";
 import Patients from "../../components/patients/patients";
+
+import {getUpdatesForPatient} from "../../firebase/firebase.utils";
 
 function Copyright() {
   return (
@@ -152,6 +156,9 @@ function ProviderDashboard() {
       providerId: 1
     }
   ];
+  // TODO: Delete. Test Firebase function
+  getUpdatesForPatient("7554864663")
+    .then(data => console.log(data))
 
   return (
     <div className={classes.root}>
